@@ -1,0 +1,9 @@
+Raspberry Pi runs Debian Wheezy image, however for development and testing purpose we can purpose we can use either Windows, Linux or Macs provided we have the following packages or softwares installed:
+
+* python
+
+
+* nodejs
+sudo apt-get install npm
+
+* mongoDB

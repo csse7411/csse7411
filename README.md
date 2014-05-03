@@ -4,12 +4,13 @@ The repository has the source code organized in the following directories:
 1. raspi - Contains all the source code related to raspberry pi
 2. zigdui - Contains all the source code related to zigduino mote
 3. andro - Contains all the source code related to android phone
+4. docs - Overall architecture and design describing how the modules communicate with each other
 
 We have created a single repository to make all three sub-modules because:
 (1) It is simple (rather than going to git submodules)
 (2) Any change in any part of the sub-modules leads to an increase in commit and we can use a single versioning (tag)
 
-The sub-folder, code design, setup and how to run is explained inside the docs folder present inside the above mentioned 3 directories.
+The sub-folder, code design, setup and how to run is explained inside the docs folder present inside the above mentioned 4 directories.
 
 
 -----------------------------
