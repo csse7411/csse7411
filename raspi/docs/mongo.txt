@@ -1,0 +1,56 @@
+Getting used to MongoDB
+----------------------------------
+
+* Connect to mongod
+mongo
+
+* Select a Database
+show dbs
+
+* Create new database
+use <database_name>
+
+* Display help on Mongo shell
+help
+
+* Creating documents
+j = { name : "mongo" }
+k = { x : 3 }
+
+* Inserting into collection mycollection
+db.mycollection.insert( j )
+db.mycollection.insert( k )
+
+* Confirm that the collection exists
+show collections
+
+* Confirm that documents exists in mycollection
+db.mycollection.find()
+
+* Find specific documents
+db.mycollection.find( { x: 3 } )
+
+Note: MongoDB stores data in form of documents, which are JSON-like field value pairs
+
+Documents are analogous to structures in programming language
+
+All documents are stored in collection. A collection is a group of related documents that have a set of shared common indexes.
+
+-------------------------------------------------------------------------
+* Query
+db.mycollection.find( { age: { $gt: 18 } } ).sort( { age: 1 } )
+
+* Find and display Age field only {age:1}
+db.mycollection.find( { age: { $gt: 18 } }, { age: 1 } )
+
+* Insert
+db.mycollection.insert( { name : "sue", age: "26", status: "A", groups: [ "news", "sports" ] } ).limit(5)
+
+* Update - Find all documents with type book and modify qunatity by -1
+db.mycollection.update( { type: "book"}, { $inc: { qty: -1 } }, { multi: true } )
+
+* Remove all documents from collection
+db.inventory.remove( {} )
+
+* Remove documents that match a condition
+db.inventory.remove( { type: "food" } )
