@@ -9,6 +9,7 @@ npm install express
 express webserver
 cd webserver
 npm install
+npm install mongoose --save
 
 * Execute webserver
 node webserver/bin/www
