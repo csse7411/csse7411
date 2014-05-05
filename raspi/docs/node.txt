@@ -4,7 +4,15 @@ sudo add-apt-repository ppa:chris-lea/node.js
 sudo apt-get update
 sudo apt-get install nodejs
 
+* Install node_modules
+npm install express
+express webserver
+cd webserver
+npm install
+
 * Execute webserver
 node webserver/bin/www
 OR
 npm start
+
+* Try http://localhost:3000

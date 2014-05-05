@@ -3,3 +3,4 @@
 *.o
 *.pyc
 raspi/node_modules/*
+raspi/webserver/node_modules/*
