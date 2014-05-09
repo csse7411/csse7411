@@ -8,6 +8,9 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+// RK: Include path to route file
+var datacollector = require('./datacollector/route');
+
 // RK: Package required to connect to Mongo DB
 var mongoose = require('mongoose');
 
@@ -24,11 +27,16 @@ app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
+// app.use(express.json());       // to support JSON-encoded bodies
+// app.use(express.urlencoded()); // to support URL-encoded bodies
+
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+//RK: Route string
+app.use('/api', datacollector);
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {

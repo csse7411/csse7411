@@ -6,8 +6,12 @@ sudo apt-get install nodejs
 
 * Install node_modules
 npm install express
+
+* Create web application
 express webserver
 cd webserver
+
+* Install required packages
 npm install
 npm install mongoose --save
 
