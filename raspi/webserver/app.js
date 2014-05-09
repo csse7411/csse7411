@@ -13,11 +13,12 @@ var datacollector = require('./datacollector/route');
 
 // RK: Package required to connect to Mongo DB
 var mongoose = require('mongoose');
+require('./datacollector/db');
 
 var app = express();
 
 // RK: connect to Mongo DB
-mongoose.connect('mongodb://localhost/rktest')
+mongoose.connect('mongodb://localhost/rktest');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
