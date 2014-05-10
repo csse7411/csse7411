@@ -1,0 +1,3 @@
+Zigduino listener will have two files:
+* To listen to any incoming requests on /dev/ttyUSB
+* To forward the request via HTTP to nodejs webserver

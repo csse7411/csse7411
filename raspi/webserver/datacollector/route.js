@@ -21,14 +21,19 @@ router.get('/sensors', function(req, res) {
 /* RK: Post data to be saved */
 router.post('/sensors', function(req, res) {
 	console.log("Received post");
-	new sensor({
-		timestamp: Date.now(),
-    	sensortype: req.body.sensortype,
-    	sensor: req.body.sensor,
-    	value: req.body.value,
-	}).save( function( err, todo, count ){
-	    res.send('Saved');
-	});
+	if ( typeof req.body.sensortype != 'undefined' && typeof req.body.sensor != 'undefined' && typeof req.body.value != 'undefined') {
+		new sensor({
+			timestamp: Date.now(),
+	    	sensortype: req.body.sensortype,
+	    	sensor: req.body.sensor,
+	    	value: req.body.value,
+		}).save( function( err, todo, count ){
+		    res.send('Saved');
+		});
+	}
+	else {
+		res.send('Unsaved');
+	}
 });
 
 /* RK: Never used, but simply written for completeness */
