@@ -1,39 +1,43 @@
+/* APIs for data collector */
 var express = require('express');
 var router = express.Router();
 var mongoose = require( 'mongoose' );
 var sensor = mongoose.model('Sensor');
 
-/* GET home page. */
+/* RK: GET default home page */
 router.get('/', function(req, res) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/sensor', function(req, res) {
+/* RK: GET sensor data with optional parameters*/
+router.get('/sensors', function(req, res) {
 	console.log("Received get");
-	res.send('respond with a resource\r\n');
+	console.log(req.query);
+	sensor.find(req.query, 'timestamp sensortype sensor value', function(err, readsensor) {
+		res.send(readsensor);
+	});
 });
 
-router.post('/sensor', function(req, res) {
-	console.log(req.body);
+/* RK: Post data to be saved */
+router.post('/sensors', function(req, res) {
 	console.log("Received post");
-	new Sensor({
+	new sensor({
 		timestamp: Date.now(),
     	sensortype: req.body.sensortype,
     	sensor: req.body.sensor,
     	value: req.body.value,
 	}).save( function( err, todo, count ){
-	    res.redirect( '/' );
+	    res.send('Saved');
 	});
-	res.send('respond with a resource\r\n');
 });
 
 /* RK: Never used, but simply written for completeness */
-router.delete('/sensor', function(req, res) {
+router.delete('/sensors', function(req, res) {
 	console.log("Received delete request\r\n");
 	res.send('Not implemented');
 });
 
-router.put('/sensor', function(req, res) {
+router.put('/sensors', function(req, res) {
 	console.log("Received put request\r\n");
 	res.send('Not implemented');
 });

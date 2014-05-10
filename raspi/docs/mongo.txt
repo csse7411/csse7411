@@ -54,3 +54,7 @@ db.inventory.remove( {} )
 
 * Remove documents that match a condition
 db.inventory.remove( { type: "food" } )
+
+------------------------------------------------------------------------
+* Drop Collection
+db.mycollection.drop()

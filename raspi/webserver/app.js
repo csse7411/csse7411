@@ -5,20 +5,19 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+// RK: Package required to connect to Mongo DB
+var mongoose = require('mongoose');
+require('./datacollector/db');
+// RK: connect to Mongo DB
+mongoose.connect('mongodb://localhost/rktest');
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
 // RK: Include path to route file
 var datacollector = require('./datacollector/route');
 
-// RK: Package required to connect to Mongo DB
-var mongoose = require('mongoose');
-require('./datacollector/db');
-
 var app = express();
-
-// RK: connect to Mongo DB
-mongoose.connect('mongodb://localhost/rktest');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
