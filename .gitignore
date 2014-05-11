@@ -5,3 +5,5 @@
 *~
 raspi/node_modules/*
 raspi/webserver/node_modules/*
+*.class
+*.apk
