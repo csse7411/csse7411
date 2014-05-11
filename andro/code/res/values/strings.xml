@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">CSSE4011 Lab7</string>
+    <string name="action_settings">Settings</string>
+	
+    <string name="audio_stop_clapper">Stop</string>
+    <string name="audio_magnitude_label">Max Amplitude</string>
+    <string name="audio_log">Detections</string>
+    <string name="audio_start_pitch">Start Logging</string>
+   
+    <string name="audio_status_recording">Recording</string>
+    <string name="audio_status_stopped">Not Recording</string>
+</resources>

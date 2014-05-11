@@ -1,0 +1,29 @@
+package com.office_occupancy;
+
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+
+public class Accelerometer implements SensorEventListener {
+	private SensorManager mSensorManager;
+	Sensor accelerometer;
+	Sensor magnetometer;
+	Float azimut;
+	
+	public Accelerometer() {
+		  mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+	      accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+	      magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);	    
+	}
+	
+	public void register() {
+	      // for the system's orientation sensor registered listeners
+		  mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
+		  mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
+	}
+	
+	public void unregister() {
+		  mSensorManager.unregisterListener(this);
+	}
+}
