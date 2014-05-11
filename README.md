@@ -2,6 +2,7 @@ csse7411
 ========
 Test- > Romaan Added
 
+ADDED BY MASA
 The repository has the source code organized in the following directories:
 1. raspi - Contains all the source code related to raspberry pi
 2. zigdui - Contains all the source code related to zigduino mote
