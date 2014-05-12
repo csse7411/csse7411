@@ -35,6 +35,7 @@ implementation {
 
 	int time_cnt = 0;
 	int event_detected;
+	int Cntr = 0;
 
 	/* Current local state - interval, version and accumulated readings */
 	oscilloscope_t local;
@@ -106,9 +107,20 @@ implementation {
 	event void Timer.fired() {
 		//If event is detected, transmit packet
 		if(event_detected > 0) {
-			memcpy(call AMSend.getPayload(&sendBuf, sizeof(local)), &local,
-					sizeof local);
-			call AMSend.send(AM_BROADCAST_ADDR, &sendBuf, sizeof local);
+		  oscilloscope_t * omsg;
+		  omsg = (oscilloscope_t *)call AMSend.getPayload(&sendBuf, sizeof(local));
+		  if (omsg == NULL) {
+		  return;
+      }
+			memcpy(omsg, &local, sizeof (local));
+			printf("X:%d Y:%d Z:%d\n\r",  omsg-> readings[0], 
+			                              omsg-> readings[1],
+			                              omsg-> readings[2]);
+			printfflush();
+			
+			Cntr++;
+			omsg->count = (nx_uint16_t)Cntr;
+			call AMSend.send(AM_BROADCAST_ADDR, &sendBuf, sizeof (local));
 			event_detected = 0;
 		}
 		//Read X,Y,Z values
