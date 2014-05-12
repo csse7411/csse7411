@@ -8,4 +8,4 @@ curl --data "sensortype=zigduino&sensor=pir&value=1" http://localhost:3000/api/s
 
 #Get sensor data via GET API call
 curl http://localhost:3000/api/sensors
-curl hp://localhost:3000/api/sensors?sensortype=zigduino
+curl http://localhost:3000/api/sensors?sensortype=zigduino
