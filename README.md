@@ -1,8 +1,5 @@
 csse7411
 ========
-Test- > Romaan Added
-
-ADDED BY MASA
 The repository has the source code organized in the following directories:
 1. raspi - Contains all the source code related to raspberry pi
 2. zigdui - Contains all the source code related to zigduino mote
@@ -46,4 +43,5 @@ git clone https://github.com/csse7411/csse7411.git
        git push origin master
    (k) Delete the branch we created at the start locally
        git branch -d <task1>
+       
 --------------------------------
