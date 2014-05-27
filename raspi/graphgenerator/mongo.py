@@ -29,7 +29,7 @@ class mongo:
 
 	#Return a list of the sensors in the database
 	#Use this list as the keys of the dictionary for self.get_array()
-	def get_sensors(self):
+	def get_nodes(self):
 		Sensor_Array = []
 		for a in self.collection.find():
 			ok = 0
@@ -45,7 +45,7 @@ class mongo:
 	# takes a start time, end time and a array to read
 	def get_array_time(self, start, end, data):
 		Sensor_Array = {}
-		data = self.get_array()
+		#data = self.get_array()
 		for a in data.keys():
 			Sensor_Array[a] = []
 		for a in data.keys():

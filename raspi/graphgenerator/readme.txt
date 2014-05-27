@@ -6,3 +6,4 @@ sudo apt-get install python-pip
 
 sudo pip install pymongo
 
+sudo apt-get install python-numpy python-scipy python-matplotlib
