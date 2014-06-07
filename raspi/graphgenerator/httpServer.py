@@ -1,40 +1,31 @@
-import socket
-import sys
-import thread
+from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 import time
+from httpinterface import *
 
-def handle(s):
-    data = repr(s.recv(4096))
-    if(data.find("?") < 1):
-        s.close()
-        return 0 
-    p = data.split("?")
-    for a in range(0,len(p)-1):
-	print p[a]
-    s.send('''
-    HTTP/1.1 101 Web Socket Protocol Handshake\r
-    Upgrade: WebSocket\r
-    Connection: Upgrade\r
-    WebSocket-Origin: http://localhost:8888\r
-    WebSocket-Location: ws://localhost:4000/\r
-    WebSocket-Protocol: sample
-    '''.strip() + '\r\n\r\n')
-    s.send("Hello World")
-    s.close()
-    return 0
-
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# Bind the socket to the port
-server_address = ('127.0.0.1', 4000)
-print 'starting up on %s port %s' % server_address
-sock.bind(server_address)
-
-sock.listen(1)
+CUSTOM_PORT = 4000
+inter = interface()
 
 
-while True:
-    # Wait for a connection
-    print 'waiting for a connection'
-    connection, client_address = sock.accept()
-    args = (connection,)
-    thread.start_new_thread(handle, args)
+class MyWebServer(BaseHTTPRequestHandler):
+    """Handler for the GET requests"""
+    def do_GET(self):
+	filename = inter.extract_param(self.path.split("?")[1])-1
+        self.send_response(200)
+        self.send_header('Content-type','text/html')
+        self.end_headers()
+        # Send the html message
+        self.wfile.write(str(filename)+".png")
+        return
+
+""" Test - curl http://localhost:8888 """
+
+if __name__ == "__main__":
+    try:
+        # Instantiate a HTTP Server
+        server = HTTPServer(('', CUSTOM_PORT), MyWebServer)
+        print 'Started httpserver on port ' , CUSTOM_PORT   
+        # Wait forever for incoming htto requests
+        server.serve_forever()
+    except KeyboardInterrupt:
+        print '^C received, shutting down the web server'
+        server.socket.close()

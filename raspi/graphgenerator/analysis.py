@@ -120,6 +120,8 @@ class analysis:
 		truth_value = truth.get_table()[node]
 		activity_sum = truth_value[sensor]
 		block = self.calculate_block_activity(total_time, node, truth_array) #one activity every x seconds
+		if(block < 1):
+			block = 1
 		out = []
 		while start <= end:
 			activity = 0
@@ -152,12 +154,12 @@ class analysis:
 				out.append(b)
 		return self.sort(out)
 
-	def room_occupency(self, mon, init):
+	def room_occupency(self, mon, init,start,end):
 		data = mon.get_array()
 		node = 'door'
 		data = {node: data[node]}
-		start = self.get_time_bounds(data)[0]
-		end = self.get_time_bounds(data)[1]
+		#start = self.get_time_bounds(data)[0]
+		#end = self.get_time_bounds(data)[1]
 		print end
 		out_x = [0,start-0.001]
 		out_y = [0,init]

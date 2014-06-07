@@ -6,6 +6,7 @@ class plotting:
 		print "Plotter"
 
 	def new(self, fig):
+		self.fig = fig
 		pylab.figure(fig)
 
 	def sort_list(self,x_list, y_list):
@@ -46,4 +47,5 @@ class plotting:
 		pylab.legend()
 
 	def show(self):
-		pylab.show()
+		pylab.savefig("/home/pi/csse7411/raspi/webserver/public/images/"+str(self.fig)+".png", bbox_inches='tight')
+		#pylab.show()
