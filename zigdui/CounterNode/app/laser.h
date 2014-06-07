@@ -18,4 +18,8 @@ typedef enum Laser_Beam_Status_Type{
     LASER_BEAM_STAT_BLOCKED = 0,
     LASER_BEAM_STAT_UNBLOCKED
 }tLaser_Beam_Status;
+typedef enum Movement_Dir_Type{
+    Dir_Enter = 1,
+    Dir_Exit
+}Movement_Dir_t;
 #endif

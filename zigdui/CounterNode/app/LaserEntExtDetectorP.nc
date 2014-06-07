@@ -75,9 +75,9 @@ implementation {
 		printf("=");
 		printfflush();
 	}
-	void ProcessCntrOff(tLaser_Sensor_ID ID){
+	void ProcessCntr(tLaser_Sensor_ID ID){
 		if (EdgeCntr[ID]>0)
-		{ // an expected rising edge has not happened - An obstacle detected!
+		{ // an expected  edge has not happened - An obstacle detected!
 			EdgeCntr[ID]  = 0;
 			Blocked[ID]  = TRUE;
 			if (Blocked[ID] != BlockedOld[ID])
@@ -102,30 +102,6 @@ implementation {
 		}
 	
 	}
-	void ProcessCntrOn(tLaser_Sensor_ID ID){
-		if (EdgeCntr[ID] > 0)
-		{ // an expected rising edge has not happened - An obstacle detected!
-			EdgeCntr[ID]  = 0;
- 
-			Blocked[ID]  = TRUE;
-			if (Blocked[ID] != BlockedOld[ID])
-			{
-				BlockedOld[ID] = Blocked[ID];
-				call StateProcessor.Process(ID, TRUE);
-
-			}                   
-		}
-		else
-		{
-			// unblocked
-			if (Blocked[ID] != BlockedOld[ID])
-			{
-				BlockedOld[ID] = Blocked[ID];
-				call StateProcessor.Process(ID, FALSE);
-
-			}                   
-		}
-	}
 	event void LaserEmeaterTimer.fired()
 	{
 		// __nesc_atomic_t  temp;
@@ -134,15 +110,13 @@ implementation {
 		// has been OFF
 		atomic
 		{
+			ProcessCntr(ID_INNER);
+			ProcessCntr(ID_OUTTER);		
+			EdgeCntr[ID_INNER]++;
+			EdgeCntr[ID_OUTTER]++;
+	
 			if (LaserDiodState == 0 )
 			{
-	
-				ProcessCntrOff(ID_INNER);
-				ProcessCntrOff(ID_OUTTER);
-	
- 
-				EdgeCntr[ID_INNER]++;
-				EdgeCntr[ID_OUTTER]++;
 				LaserDiodState = 1;
 			
 				call Laser_Outter.enableRisingEdge() ;
@@ -152,12 +126,6 @@ implementation {
 			else
 				// has been ON
 			{
-				ProcessCntrOn(ID_INNER);
-				ProcessCntrOn(ID_OUTTER);
-
- 
-				EdgeCntr[ID_INNER] ++;
-				EdgeCntr[ID_OUTTER] ++;
 				LaserDiodState = 0;
 				
 				call Laser_Outter.enableFallingEdge() ;
