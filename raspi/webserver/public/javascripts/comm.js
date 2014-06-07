@@ -1,4 +1,4 @@
-var myURL="http://localhost:4000?";
+var myURL="http://10.0.0.1:4000?";
 
 $(document).ready(function(e) {
 	 $("#sendButton").click(function() {
