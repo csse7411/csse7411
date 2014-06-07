@@ -3,3 +3,17 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
+
+  div
+   form(action='http://localhost:4000',method='get')
+   h2 Phone Sensor <br/>
+    select(name='Sensor')
+     option(value='andro1', selected=true) Android 1
+     option(value='andro1') Android 2
+    select(name='SensorType')
+     option(value='ACL') Accelerometer
+     option(value='VCCL') Audio Sensor
+    input(type='text',name='starttime',value='')
+    input(type='text',name='endtime',value='')
+    input(type='submit',name='submit',value='Submit')
+    <hr/>

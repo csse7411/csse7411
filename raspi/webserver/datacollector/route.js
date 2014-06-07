@@ -11,7 +11,7 @@ router.get('/', function(req, res) {
 
 /* RK: GET sensor data with optional parameters*/
 router.get('/sensors', function(req, res) {
-	console.log("Received get");
+	console.log("Received get sensors");
 	console.log(req.query);
 	sensor.find(req.query, 'timestamp sensortype sensor value', function(err, readsensor) {
 		res.send(readsensor);
@@ -20,7 +20,6 @@ router.get('/sensors', function(req, res) {
 
 /* RK: Post data to be saved */
 router.post('/sensors', function(req, res) {
-	console.log("Received post");
 	if ( typeof req.body.sensortype != 'undefined' && typeof req.body.sensor != 'undefined' && typeof req.body.value != 'undefined') {
 		new sensor({
 			timestamp: Date.now(),
@@ -28,6 +27,7 @@ router.post('/sensors', function(req, res) {
 	    	sensor: req.body.sensor,
 	    	value: req.body.value,
 		}).save( function( err, todo, count ){
+			console.log("Received post from :"+req.body.sensortype+" Sensor:"+req.body.sensor);
 		    res.send('Saved');
 		});
 	}
