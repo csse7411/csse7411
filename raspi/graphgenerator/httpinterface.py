@@ -9,11 +9,12 @@ class interface:
 		self.fig = 0
 
 	def average(self,params):
-		if(len(params) != 5):
+		if(len(params) != 6):
 			return
-		node = params[3][1]
-		sensor = params[4][1]
-		if(params[3][0] == "node" and params[4][0] == "sensor"):
+		zone = params[1][1]
+		node = params[2][1]
+		sensor = params[3][1]
+		if(params[2][0] == "sensor" and params[3][0] == "sensortype"):
 				if(sensor == "all" and node != "all"):
 					s = self.a.collective_average(self.m, self.t, {node:self.m_time[node]})
 				if(sensor == "all" and node == "all"):
@@ -37,14 +38,18 @@ class interface:
 				for b in s:
 					avg.append(b[3])
 					avgx.append(b[0])
-				self.p.add_box(avgx,avg,'g',0,20,"Node:"+str(node)+ " Sensor:" +str(sensor) +" Average")
+				width = (avgx[len(avgx)-1]-avgx[0])/(len(avg)*2)
+				if(width == 0):
+					width = 10
+				self.p.add_box(avgx,avg,'g',0,width,"Node:"+str(node)+ " Sensor:" +str(sensor) +" Average")
 	
 	def weighted_vote(self,params):
-		if(len(params) != 5):
+		if(len(params) != 6):
 			return
-		node = params[3][1]
-		sensor = params[4][1]
-		if(params[3][0] == "node" and params[4][0] == "sensor"):
+		zone = params[1][1]
+		node = params[2][1]
+		sensor = params[3][1]
+		if(params[2][0] == "sensor" and params[3][0] == "sensortype"):
 			c = []
 			if(node != "all" and sensor == "all"):
 				c = self.a.weighted_vote(self.m,self.t,{node:self.m_time[node]})
@@ -74,8 +79,11 @@ class interface:
 				pos.append(b[3][0])
 				neg.append(b[3][1])
 				x.append(b[0])
-			self.p.add_box(x,pos,'b',0,20,"Node:"+str(node)+ " Sensor:" +str(sensor) +" Pos vote")
-			self.p.add_box(x,neg,'r',20,20,"Node:"+str(node)+ " Sensor:" +str(sensor) +" Neg vote")
+			width = (x[len(x)-1]-x[0])/(len(pos)+len(neg))
+			if(width == 0):
+				width = 10
+			self.p.add_box(x,pos,'b',0,width,"Node:"+str(node)+ " Sensor:" +str(sensor) +" Pos vote")
+			self.p.add_box(x,neg,'r',width,width,"Node:"+str(node)+ " Sensor:" +str(sensor) +" Neg vote")
 	
 	
 	def call_graph(self,graph_type,params):
@@ -83,10 +91,12 @@ class interface:
 		self.a = analysis()
 		self.p = plotting()
 		self.t = truth('test.txt')
-		self.m_time = self.m.get_array_time(float(params[1][1]), float(params[2][1]),self.m.get_array())
+		start = float(params[4][1])
+		end = float(params[5][1])
+		self.m_time = self.m.get_array_time(start, end,self.m.get_array())
 		self.p.new(self.fig)
 		if(graph_type == "occupency"):
-			c = self.a.room_occupency(self.m, 10,float(params[1][1]),float(params[2][1]))
+			c = self.a.room_occupency(self.m, 10,start,end)
 			self.p.add_line(c[0], c[1], 'b')
 		if(graph_type == "average"):
 			self.average(params)

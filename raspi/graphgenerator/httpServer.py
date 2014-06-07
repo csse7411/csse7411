@@ -1,5 +1,4 @@
 from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
-import time
 from httpinterface import *
 
 CUSTOM_PORT = 4000

@@ -39,7 +39,10 @@ class analysis:
 		count = 0
 		for a in avg:
 			count = a + count
-		p = count/len(avg)
+		if(len(avg) == 0):
+			return 1
+		else:
+			p = count/len(avg)
 		count = 0
 		out = []
 		for a in avg:
