@@ -9,7 +9,7 @@ inter = interface()
 class MyWebServer(BaseHTTPRequestHandler):
     """Handler for the GET requests"""
     def do_GET(self):
-	filename = inter.extract_param(self.path.split("?")[1])-1
+	filename = inter.extract_param(self.path.split("?&")[1])-1
         self.send_response(200)
         self.send_header('Content-type','text/html')
         self.end_headers()
