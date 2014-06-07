@@ -79,7 +79,7 @@ class interface:
 	
 	
 	def call_graph(self,graph_type,params):
-		self.m = mongo('localhost', 27017,'Sensors','mycollection')
+		self.m = mongo('localhost', 27017,'rktest','mycollection')
 		self.a = analysis()
 		self.p = plotting()
 		self.t = truth('test.txt')

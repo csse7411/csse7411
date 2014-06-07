@@ -14,6 +14,7 @@ class MyWebServer(BaseHTTPRequestHandler):
         self.send_header('Content-type','text/html')
         self.end_headers()
         # Send the html message
+        print(str(filename)+".png")
         self.wfile.write(str(filename)+".png")
         return
 

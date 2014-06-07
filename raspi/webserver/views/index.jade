@@ -10,13 +10,27 @@ block content
    h2 Phone Sensor <br/>
     select(name='Graph',id='graph')
      option(value='avg', selected=true) Average
-     option(value='wavg') Weight Avg
+     option(value='wavg') Weight Vote
+     option(value='generic') ----
+    select(name='Zone',id='zone')
+     option(value='zone1', selected=true) Zone 1
+     option(value='zone2') Zone 2
+     option(value='zone3') Zone 3
+     option(value='zone4') Zone 4
+     option(value='zone') Zone All
     select(name='Sensor',id='sensor')
      option(value='andro1', selected=true) Android 1
-     option(value='andro1') Android 2
+     option(value='andro2') Android 2
+     option(value='andro3') Android 3
+     option(value='zig1') Zigduino 1
+     option(value='zig2') Zigduino 2
+     option(value='zig3') Zigduino 3
+     option(value='zig4') Zigduino 4     
     select(name='SensorType',id='sensortype')
      option(value='ACL') Accelerometer
-     option(value='VCCL') Audio Sensor
+     option(value='VC') Audio Sensor
+     option(value='LASER') Laser
+     option(value='PIR') PIR
     input(type='text',name='starttime',id='starttime',placeholder='ddmmyyyyhhmmss',value='')
     input(type='text',name='endtime',id='endtime',placeholder='ddmmyyyyhhmmss',value='')
     input(type='submit',value='Submit',id='sendButton')
