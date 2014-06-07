@@ -1,5 +1,6 @@
 from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 from httpinterface import *
+import simplejson as json
 
 CUSTOM_PORT = 4000
 inter = interface()
@@ -10,11 +11,12 @@ class MyWebServer(BaseHTTPRequestHandler):
     def do_GET(self):
 	filename = inter.extract_param(self.path.split("?&")[1])-1
         self.send_response(200)
-        self.send_header('Content-type','text/html')
+        self.send_header('Content-type','application/json')
+        self.send_header('Content-length',str(len(str(filename)+".png")))
+        self.send_header('Access-Control-Allow-Origin','*')
         self.end_headers()
         # Send the html message
-        print(str(filename)+".png")
-        self.wfile.write(str(filename)+".png")
+        self.wfile.write(json.dumps(str(filename)+".png"))
         return
 
 """ Test - curl http://localhost:8888 """

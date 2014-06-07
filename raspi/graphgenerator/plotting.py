@@ -47,5 +47,5 @@ class plotting:
 		pylab.legend()
 
 	def show(self):
-		pylab.savefig("/home/pi/csse7411/raspi/webserver/public/images/"+str(self.fig)+".png", bbox_inches='tight')
+		pylab.savefig("../webserver/public/images/"+str(self.fig)+".png", bbox_inches='tight')
 		#pylab.show()
