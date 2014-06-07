@@ -156,10 +156,10 @@ class analysis:
 		data = mon.get_array()
 		node = 'door'
 		data = {node: data[node]}
-		start = 0
+		start = self.get_time_bounds(data)[0]
 		end = self.get_time_bounds(data)[1]
 		print end
-		out_x = [0,0.001]
+		out_x = [0,start-0.001]
 		out_y = [0,init]
 		while start <= end:
 			a = mon.get_entry_exit(mon.get_array_time(start, start+1,data))
