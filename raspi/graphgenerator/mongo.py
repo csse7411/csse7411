@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-import datetime
+import datetime, time
 
 
 # Mongo Database class for python
@@ -18,12 +18,13 @@ class mongo:
 		for a in self.collection.find():
 			ok = 0
 			for b in Sensor_Array.keys():
-				if(b == a[a.keys()[3]]):
+				if(b == a[a.keys()[2]]):
 					ok = 1
 					break
 			if(ok == 0):
-				Sensor_Array[a[a.keys()[3]]] = []
-			Sensor_Array[a[a.keys()[3]]].append((a[a.keys()[1]],a[a.keys()[2]],a[a.keys()[0]],a[a.keys()[4]]))
+				Sensor_Array[a[a.keys()[2]]] = []
+			t = time.mktime(a[a.keys()[0]].timetuple())
+			Sensor_Array[a[a.keys()[2]]].append((t,a[a.keys()[4]],a[a.keys()[5]],a[a.keys()[1]]))
 		return Sensor_Array
 
 
@@ -34,11 +35,11 @@ class mongo:
 		for a in self.collection.find():
 			ok = 0
 			for b in Sensor_Array:
-				if(b == a[a.keys()[3]]):
+				if(b == a[a.keys()[2]]):
 					ok = 1
 					break
 			if(ok == 0):
-				Sensor_Array.append(a[a.keys()[3]])
+				Sensor_Array.append(a[a.keys()[2]])
 		return Sensor_Array
 	
 	#Returns the raw data as a dictionary

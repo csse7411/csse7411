@@ -75,6 +75,8 @@ class analysis:
 	def weighted_vote(self, mon, truth, data):
 		print "Weighted Vote"
 		time_split = self.calculate_time_split(mon, data)
+		if(time_split < 1):
+			time_split = 1
 		end = self.get_time_bounds(data)[1]
 		start  = self.get_time_bounds(data)[0]
 		node = data.keys()[0]
@@ -99,6 +101,7 @@ class analysis:
 					neg.append(s-t)
 			out.append((start, 'none', 'weighted_vote', (self.sum_vote(pos),self.sum_vote(neg))))
 			start = start + time_split
+		print "Done!"
 		return out
 
 	def calculate_block_activity(self, time,node,data):
@@ -131,7 +134,7 @@ class analysis:
 			for a in truth_array[node]:
 				if((a[0] >= start) and (a[0] <= (start+block))):
 					activity = activity + activity_sum
-			if(activity > (1-activity_sum)):
+			if(activity > (1+(1*activity_sum)-activity_sum)):#blah
 				 out.append((start, 'none', 'average_vote', activity))
 			start = start + block
 		return out

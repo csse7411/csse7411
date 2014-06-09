@@ -1,9 +1,6 @@
-android1,sound,0.70
-android1,pir,0.96
-android1,co2,0.2
-door,laser_on,1
-door,laser_off,1
-zig1,accel,0.35
-zig1,pir,0.97
-zig2,accel,0.22
-zig2,pir,0.95
+andro2,VC,0.5478
+andro2,ACCL,0.8562
+andro1,VC,0.583
+andro1,ACCL,0.8923
+andro3,VC,0.5134
+andro3,ACCL,0.8756
