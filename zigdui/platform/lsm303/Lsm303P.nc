@@ -247,7 +247,7 @@ implementation {
 	//Read done event
 	async event void I2CPacket.readDone(error_t error, uint16_t addr, uint8_t length, uint8_t* data) {
 
-		int i;
+	
 		uint8_t val[6];
 		lastError=error;
 		if(error!=SUCCESS){

@@ -1,3 +1,6 @@
+ZIGDUINO_ROOT=./../
+PLATFORM_DIR=$(ZIGDUINO_ROOT)/platform
+COMMON = $(ZIGDUINO_ROOT)/common
 COMPONENT=CrowdCntAppC
 
 CFLAGS += -I$(TOSDIR)/lib/printf
@@ -5,7 +8,7 @@ CFLAGS += -I$(TOSDIR)/lib/ftsp
 
 CFLAGS += -DTOSH_DATA_LENGTH=32
 
-CFLAGS += -I./platform
-CFLAGS += -I../common
+CFLAGS += -I$(PLATFORM_DIR)
+CFLAGS += -I$(COMMON)
 include $(MAKERULES)
 

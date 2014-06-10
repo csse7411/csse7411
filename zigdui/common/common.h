@@ -23,7 +23,7 @@ enum{
 VIBRATING = 0xA5
 };
 enum{
-PIR_ACTIVATED = 0xA5
+PIR_ACTIVATED = 0x99
 };
 
 typedef nx_struct Packet {
@@ -31,6 +31,14 @@ typedef nx_struct Packet {
   nx_uint8_t Sensor;
   nx_uint8_t Data; 
 } Packet_t;
+
+#define NREADINGS 8
+
+//Accelerometer Data
+typedef struct AcclDataType {
+  uint16_t count; /* The readings are samples count * NREADINGS onwards */
+  uint16_t readings[NREADINGS];
+} AcclData_t;
 
 #endif //_OOD_COMMON_H
 

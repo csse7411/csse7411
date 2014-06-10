@@ -1,33 +1,42 @@
-//Motion Sensing program for SSHNode.
 
 #include "Timer.h"
-#include "Oscilloscope.h"
+#include "common.h"
 #include "lsm303.h"
 #include "printf.h"
 
 //#define DEBUG 1
 
 
-module MotionOscC @safe() {
+module SensingNodeC @safe() {
 	uses {
 		interface Boot;
 		interface SplitControl as RadioControl;
 		interface AMSend;
-		interface Receive;
+		//interface Receive;
 		interface Timer<TMilli>;
 		interface Leds;
 		interface Read<lsm303_data_t> as ReadXYZout;
 		interface Read<uint8_t> as ReadSR;
 		interface Set<uint8_t> as SetMode;
+	
+		//interface GpioInterruptPlus as PIRPin;
+		interface GeneralIO as PIRPin;
+	
 	}
 }
 
 implementation {
 
 	message_t sendBuf;
-
-	float threshold_max = 15.5;	//10.5
-	float threshold_min = 9.5;	//9.5
+	AcclData_t AcclData;
+	Packet_t Packet;
+    Packet_t PacketPIR;
+	bool PIRDetectOld = FALSE;
+	bool PIRDetect = FALSE;
+	bool RadioBusy = FALSE;
+	bool PIREvent;
+	float threshold_max = 10.5;
+	float threshold_min = 7.5;
 	int threshold_cnt = 4;
 	int svn_cnt;
 	float svn[10];
@@ -37,18 +46,20 @@ implementation {
 	int event_detected;
 	int Cntr = 0;
 
-	/* Current local state - interval, version and accumulated readings */
-	oscilloscope_t local;
 
+ 
 	// Use LEDs to report various status issues.
 	void report_problem() {
-		call Leds.led0Toggle();
+		atomic{
+            RadioBusy = FALSE;
+        }
+		//call Leds.led0Toggle();
 	}
 	void report_sent() {
-		call Leds.led1Toggle();
-	}
-	void report_received() {
-		call Leds.led2Toggle();
+		atomic{
+			RadioBusy = FALSE;
+		}
+		//call Leds.led1Toggle();
 	}
 
 	//Initialise accelerometer.
@@ -58,12 +69,22 @@ implementation {
 		printfflush();
 		//#endif 
 
-		local.interval = 10; //Set sample interval to 10ms.
-		local.id = TOS_NODE_ID;
+		Packet.ID = TOS_NODE_ID;
+		Packet.Sensor = SENSOR_VIBRATION;
+		Packet.Data = VIBRATING;
+ 
+		PacketPIR.ID = TOS_NODE_ID;
+		PacketPIR.Sensor = SENSOR_PIR;
+		PacketPIR.Data = PIR_ACTIVATED;
+		PIREvent = FALSE;
 		if(call RadioControl.start() != SUCCESS)	
 			//Startup radio.
 		report_problem();
 
+		//call PIRPin.reset();
+		//call PIRPin.enableRisingEdge() ;
+		call PIRPin.makeInput();
+		
 		call SetMode.set(LSM303_ACC100HZ);	//Set LSM303 accelerometer sampling to 100Hz 
 
 		event_detected = 0;
@@ -74,10 +95,9 @@ implementation {
 		//#endif 
 
 	}
-
 	//Start timer
 	void startTimer() {
-		call Timer.startPeriodic(local.interval);
+		call Timer.startPeriodic(10);// Set sample interval to 10ms
 	}
 
 	//Radio control start callback - start timer if radio is initialised successfully.
@@ -88,40 +108,55 @@ implementation {
 	event void RadioControl.stopDone(error_t error) {
 	}
 
-	//Handler for receiving packets from base.
-	event message_t * Receive.receive(message_t * msg, void * payload,
-			uint8_t len) {
-		oscilloscope_t * omsg = payload;
-
-		report_received();
-
-		#ifdef DEBUG
-		printf("Packet received\n\r");
-		printfflush();
-		#endif 
-
-		return msg;
+	error_t SendPacket(Packet_t * pckt)
+	{
+		Packet_t * msg;
+		RadioBusy = TRUE;
+ 
+ 		msg = (Packet_t *)call AMSend.getPayload(&sendBuf, sizeof(Packet_t));
+		if (msg == NULL) {
+			RadioBusy = FALSE;
+			return FAIL;
+		}
+		memcpy(msg, pckt, sizeof (Packet_t));
+ 
+		call AMSend.send(AM_BROADCAST_ADDR, &sendBuf, sizeof (Packet_t));
+		return SUCCESS;
 	}
-
 	//Sample Accelerometer values periodically.
 	event void Timer.fired() {
+	
+		PIRDetect = call PIRPin.get();
+	
+		if ( PIRDetectOld != PIRDetect)
+		{
+			PIRDetectOld = PIRDetect;	
+			if (PIRDetect)
+			{
+				PIREvent = TRUE;
+				call Leds.led1On();
+			}
+			else
+				call Leds.led1Off();
+		}
+		
+		if(PIREvent)
+		{
+			if (!RadioBusy)
+			{
+				if(SendPacket(&PacketPIR) == SUCCESS)
+					PIREvent = FALSE;
+			}
+		}
+	
 		//If event is detected, transmit packet
-		if(event_detected > 0) {
-		  oscilloscope_t * omsg;
-		  omsg = (oscilloscope_t *)call AMSend.getPayload(&sendBuf, sizeof(local));
-		  if (omsg == NULL) {
-		  return;
-      }
-			memcpy(omsg, &local, sizeof (local));
-			printf("X:%d Y:%d Z:%d\n\r",  omsg-> readings[0], 
-			                              omsg-> readings[1],
-			                              omsg-> readings[2]);
-			printfflush();
-			
-			Cntr++;
-			omsg->count = (nx_uint16_t)Cntr;
-			call AMSend.send(AM_BROADCAST_ADDR, &sendBuf, sizeof (local));
-			event_detected = 0;
+		if(event_detected > 0) 
+		{
+			if(!RadioBusy)
+			{
+				if(SendPacket(&Packet) == SUCCESS)
+					event_detected = 0;
+			}
 		}
 		//Read X,Y,Z values
 		if(call ReadXYZout.read() != SUCCESS) 
@@ -154,9 +189,9 @@ implementation {
 			call Leds.led0Toggle();
 
 			//Insert X, Y, Z readings into packet
-			local.readings[0] = (uint16_t) data.accel_x;
-			local.readings[1] = (uint16_t) data.accel_y;
-			local.readings[2] = (uint16_t) data.accel_z;
+			AcclData.readings[0] = (uint16_t) data.accel_x;
+			AcclData.readings[1] = (uint16_t) data.accel_y;
+			AcclData.readings[2] = (uint16_t) data.accel_z;
 
 			//Process X, Y, Z readings
 			accx = (float) data.accel_x;
