@@ -20,7 +20,7 @@ DIR_EXIT  = 0x5A
 };
 
 enum{
-VIBRATING = 0xA5
+VIBRATING = 0x42
 };
 enum{
 PIR_ACTIVATED = 0x99
