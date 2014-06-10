@@ -8,29 +8,34 @@ import serial
 import threading
 import time
 
-sensor = ["","LASER","PIR","ACL"]
+sensor = ["","LASER","PIR","ACCL"]
 # read loop for serial port
 def read_loop():
 
   output = ''
+  ppost = ''
+  values = ''
   while read_data:
     try:
       data = s.read();
       if len(data) > 0:
         output += data
         if (data[-1]=='\n'):
-		d = data.split(":")
-		if(str(d[2]) == "A5"):
-			values = {'sensortype' : 'zig'+str(d[0]),'sensor' : 'laser_on','value' : '1' }
-			data = urllib.urlencode(values)
-		elif(str(d[2]) == "5A"):
-			values = {'sensortype' : 'zig'+str(d[0]),'sensor' :'laser_off','value' : '1' }
-			data = urllib.urlencode(values)
-		else:
-			values = {'sensortype' : 'zig'+str(d[0]),'sensor' : str(sensor[d1]),'value' : '1' }
-			data = urllib.urlencode(values)
-		urllib2.Request(url, data)
-
+		print output
+		if (len(output.split(":")) == 3):
+			d = output.split(":")
+			if(str(d[2][:-1]) == "A5"):
+				values = {'sensortype' : 'zig'+str(d[0]).replace('\r',""),'sensor' : 'laser_on','value' : '1' }
+				ppost = urllib.urlencode(values)
+			elif(str(d[2][:-1]) == "5A"):
+				values = {'sensortype' : 'zig'+str(d[0]).replace('\r',""),'sensor' :'laser_off','value' : '1' }
+				ppost = urllib.urlencode(values)
+			else:
+				values = {'sensortype' : 'zig'+str(d[0]).replace('\r',"") ,'sensor' : str(sensor[int(d[1])]),'value' : '1' }
+				ppost = urllib.urlencode(values)	
+			response = urllib2.urlopen(urllib2.Request(url, ppost, {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}))
+			print response.read()
+		output = ''
     except Exception, e:
       print "Exception:", e
 
