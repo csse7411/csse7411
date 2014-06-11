@@ -61,7 +61,7 @@ class mongo:
 		Sensor_Array = {}
 		entry = 0
 		exit = 0
-		for a in data['door']:
+		for a in data['zig4']:
 			if(a[2] == 'laser_on'):
 				entry = entry + 1
 			elif(a[2] == 'laser_off'):

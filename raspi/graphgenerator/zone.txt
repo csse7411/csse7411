@@ -1,0 +1,3 @@
+zone1:andro1,zig1
+zone2:andro2,zig2
+zone3:andro3,zig3

@@ -72,8 +72,8 @@ class analysis:
 			avg[a] = mon.get_sensortype_activation(a,data)[node]/time_blocks
 		return avg
 
-	def weighted_vote(self, mon, truth, data):
-		print "Weighted Vote"
+	def weighted_vote(self, mon, truth, data, start_true):
+		#print "Weighted Vote"
 		time_split = self.calculate_time_split(mon, data)
 		if(time_split < 1):
 			time_split = 1
@@ -83,7 +83,7 @@ class analysis:
 		sensors = mon.get_sensortype(data)
 		avg = self.average_activation(mon, data)
 		truth_value = truth.get_table()[node]
-		out = []
+		out = [(0,'none','weighted_vote', (0,0))]
 		while start <= end:
 			#print "### Start: "+str(start)+" End: "+str(start+time_split)
 			sub_array = mon.get_array_time(start, start+time_split, data)
@@ -99,9 +99,9 @@ class analysis:
 				else:
 					pos.append(t)
 					neg.append(s-t)
-			out.append((start, 'none', 'weighted_vote', (self.sum_vote(pos),self.sum_vote(neg))))
+			out.append((start-start_true, 'none', 'weighted_vote', (self.sum_vote(pos),self.sum_vote(neg))))
 			start = start + time_split
-		print "Done!"
+		#print "Done!"
 		return out
 
 	def calculate_block_activity(self, time,node,data):
@@ -115,8 +115,8 @@ class analysis:
 				out.append(a)
 		return {node: out}
 	
-	def average(self, mon, truth, sensor, data):
-		print "Average Vote"
+	def average(self, mon, truth, sensor, data, start_true):
+		#print "Average Vote"
 		node = data.keys()[0]
 		data = self.seperate_sensors(node, sensor, data)
 		end = self.get_time_bounds(data)[1]
@@ -128,14 +128,14 @@ class analysis:
 		block = self.calculate_block_activity(total_time, node, truth_array) #one activity every x seconds
 		if(block < 1):
 			block = 1
-		out = []
+		out = [(0,'none','average_vote',0)]
 		while start <= end:
 			activity = 0
 			for a in truth_array[node]:
 				if((a[0] >= start) and (a[0] <= (start+block))):
 					activity = activity + activity_sum
 			if(activity > (1+(1*activity_sum)-activity_sum)):#blah
-				 out.append((start, 'none', 'average_vote', activity))
+				 out.append((start-start_true, 'none', 'average_vote', activity))
 			start = start + block
 		return out
 
@@ -152,27 +152,48 @@ class analysis:
 			out.append(old_data.pop(pos))
 		return out
 
-	def collective_average(self, mon, truth, data):
+	def collective_average(self, mon, truth, data,start_true):
 		sensors = mon.get_sensortype(data)
 		out = []
 		for a in sensors:
-			for b in self.average(mon, truth, a, data):
+			for b in self.average(mon, truth, a, data, start_true):
 				out.append(b)
 		return self.sort(out)
 
 	def room_occupency(self, mon, init,start,end):
 		data = mon.get_array()
-		node = 'door'
+		node = 'zig4'
 		data = {node: data[node]}
 		#start = self.get_time_bounds(data)[0]
 		#end = self.get_time_bounds(data)[1]
-		print end
-		out_x = [0,start-0.001]
+		out_x = [start-1,start]
 		out_y = [0,init]
+		block = self.calculate_block_activity(end-start, node, data) #one activity every x seconds		
 		while start <= end:
-			a = mon.get_entry_exit(mon.get_array_time(start, start+1,data))
+			a = mon.get_entry_exit(mon.get_array_time(start, start+block,data))
+			print a
 			if(a[0]>0 or a[1]>0):
 				out_x.append(start)
 				out_y.append(out_y[len(out_y)-1]+(a[0]-a[1]))
-			start = start + 1
+			start = start + block
 		return (out_x, out_y)
+
+	def heat_map(self, mon, truth, zones, data,start_true):
+		#end = self.get_time_bounds(data)[1]
+		#start  = self.get_time_bounds(data)[0]
+		#total_time = end-start
+		zone_mag = {}
+		zone_dict = zones.get_zones()
+		total = 0
+		for z in zones.get_zones().keys():
+			mag = 0
+			for node in zone_dict[z]:
+				try:
+					col = self.collective_average(mon, truth, {node:data[node]},start_true)
+					#wv = self.weighted_vote(mon,truth,{node:data[node]},start_true)
+					mag = mag+len(col)#+len(wv)
+				except:
+					mag = mag + 0
+			zone_mag[z] = mag
+			total = total + mag
+		return zone_mag

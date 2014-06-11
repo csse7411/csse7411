@@ -4,3 +4,11 @@ andro1,VC,0.583
 andro1,ACCL,0.8923
 andro3,VC,0.5134
 andro3,ACCL,0.8756
+zig1,ACCL,0.416
+zig1,PIR,1.0
+zig2,ACCL,0.516
+zig2,PIR,0.863
+zig3,ACCL,0.566
+zig3,PIR,1
+zig4,laser_on,1
+zig4,laser_off,1

@@ -9,18 +9,21 @@ block content
    form(id='phonesensor')
    h2 Phone Sensor <br/>   
     select(name='Graph',id='graph')
-     option(value='generic', selected=true) ----
-     option(value='avg') Average
-     option(value='wavg') Weight Vote
+     option(value='all', selected=true) ----
+     option(value='average') Average
+     option(value='weighted') Weight Vote
+     option(value='occupancy') Occupancy
+     option(value='heat') Heat Map
+     option(value='joined') Avg vs Weighted
     select(name='Zone',id='zone')
-     option(value='generic', selected=true) ----
+     option(value='none', selected=true) ----
      option(value='zone1') Zone 1
      option(value='zone2') Zone 2
      option(value='zone3') Zone 3
      option(value='zone4') Zone 4
      option(value='zone') Zone All
     select(name='Sensor',id='sensor')
-     option(value='generic', selected=true) ----
+     option(value='all', selected=true) ----
      option(value='andro1') Android 1
      option(value='andro2') Android 2
      option(value='andro3') Android 3
@@ -29,13 +32,13 @@ block content
      option(value='zig3') Zigduino 3
      option(value='zig4') Zigduino 4     
     select(name='SensorType',id='sensortype')
-     option(value='generic') ----
-     option(value='ACL') Accelerometer
+     option(value='all') ----
+     option(value='ACCL') Accelerometer
      option(value='VC') Audio Sensor
      option(value='LASER') Laser
      option(value='PIR') PIR
-    input(type='text',name='starttime',id='starttime',placeholder='ddmmyyyyhhmmss',value='')
-    input(type='text',name='endtime',id='endtime',placeholder='ddmmyyyyhhmmss',value='')
+    input(type='text',name='starttime',id='starttime',placeholder='dd-mm-yyyy/hh:mm:ss',value='')
+    input(type='text',name='endtime',id='endtime',placeholder='dd-mm-yyyy/hh:mm:ss',value='')
     input(type='submit',value='Submit',id='sendButton')
     <hr/>
     img(src='images/office_space.jpg',id='graphimage',alt='Visual Display')    
